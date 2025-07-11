@@ -1,9 +1,117 @@
-struct estado{
+#include <stdio.h>
+#include <stdlib.h>
+#include "estado.h"
+#include <stdio.h>
+
+/*struct estado{
     int codigo[3];
     char nome[20];
     char sigla[3];
-} estd;
+} estd;*/
 
-void cad_estado() {
-    
+
+
+FILE  *parametro(char str[]) {
+    FILE *arq = fopen(str, "rb+");
+    if (arq == NULL) {
+        arq = fopen(str, "wb+");
+    if (arq == NULL) {
+            printf("erro ao abrir arquivo");
+            return arq;
+    }
+    }
+}
+
+void add_estd(estd a) {
+    FILE *f = parametro("estado.bin");
+    fseek(f, 0, SEEK_END);
+    fwrite(&a, sizeof(a), 1, f);
+    fclose(f);
+}
+
+void add_estd_ui(){                       //inserir
+    estd a;
+    printf("codigo do estado: ");
+      scanf("%d" , &a.codigo);
+    printf("nome do estado: ");
+    fflush(stdin);
+        gets(a.nome);
+    printf("sigla do estado: ");
+    fflush(stdin);
+        gets(a.sigla);
+    add_estd(a);
+}
+
+void list_estd() {
+    FILE *f = parametro("estado.bin");
+        fseek(f, 0, SEEK_END);
+        long int i = (long int) (ftell(f)/sizeof(estd));
+        if (i == 0) { exit(-1);}
+    fseek(f, 0, SEEK_SET);
+    estd a[i];
+        fread(&a, sizeof(a), i, f) == 1;
+    for (int l = 0; l < i; l++ ) {
+        printf("codigo do estado: %d\n", a[l].codigo);
+        printf("nome do estado: %s\n", a[l].nome);
+        printf("sigla do estado: %s\n", a[l].sigla);
+
+    }
+    fclose(f);
+
+}
+
+
+
+
+
+
+
+
+
+
+int main() {
+
+    printf("\n");
+    printf("==================================\n");
+    printf("  bem vindo as eleçoes IFCE 2025  \n");
+    printf("==================================\n");
+    printf("\n");
+    printf("\n");
+
+    int option;
+    printf("oque deseja realizar em seu banco de dados?.\n");
+    printf("1 - inserir estado. 2 - exluir candidato.\n");
+    printf("3 - listar candidatos. 4 - a sla man depois eu penso. \n  ");
+
+    scanf("%d", &option);
+
+
+    switch (option)
+    {
+        case 1:
+            add_estd_ui();
+            break;
+
+        case 2:
+            printf("deu bom!");
+            break;
+
+        case 3:
+             list_estd();
+            break;
+
+        case 4:
+            printf("deu bom!");
+            break;
+
+        default:
+            printf("opção invalida, tente novamente.");
+            printf("\n");
+            break;
+    }
+
+
+
+
+    return 0;
 }
