@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 /*struct estado{
-    int codigo[3];
+    int codigo;
     char nome[20];
     char sigla[3];
 } estd;*/
