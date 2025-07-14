@@ -64,7 +64,8 @@ void add_estd_ui(){                       //inserir
             code = a.codigo;
         teste_chave_primaria(code);
         if (code != 0) {
-            break;
+                printf("\n");
+                continue;
         }
         printf("nome do estado: ");
         fflush(stdin);
