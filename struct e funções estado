@@ -13,7 +13,6 @@ estd* estado[50];
 
 
 
-
 FILE  *parametro(char str[]) {
     FILE *arq = fopen(str, "rb+");
     if (arq == NULL) {
@@ -30,6 +29,24 @@ FILE *leitura(char str[]) {         //abre o arquivo para leitura
 }
 
 
+    int teste_chave_primaria(int codigo) {
+        int encontrado = 0;
+        estd a;
+        FILE *f = leitura("estado.bin");
+        while (fread(&a, sizeof(a), 1, f) == 1) {
+            if (a.codigo == codigo) {
+                encontrado = 1;
+                break;
+            }
+        }
+        if (encontrado == 1) {
+            printf("essa codigo ja existe, tente outro.");
+
+            return encontrado;
+        }
+
+}
+
 void add_estd(estd a) {
     FILE *f = parametro("estado.bin");
     fseek(f, 0, SEEK_END);
@@ -39,16 +56,26 @@ void add_estd(estd a) {
 
 void add_estd_ui(){                       //inserir
     estd a;
-    printf("codigo do estado: ");
-      scanf("%d" , &a.codigo);
-    printf("nome do estado: ");
-    fflush(stdin);
-        gets(a.nome);
-    printf("sigla do estado: ");
-    fflush(stdin);
-        gets(a.sigla);
-    add_estd(a);
+    int code = 1;
+    int tst = 0;
+    while (tst == 0) {
+        printf("codigo do estado: ");
+          scanf("%d" , &a.codigo);
+            code = a.codigo;
+        teste_chave_primaria(code);
+        if (code != 0) {
+            break;
+        }
+        printf("nome do estado: ");
+        fflush(stdin);
+            gets(a.nome);
+        printf("sigla do estado: ");
+        fflush(stdin);
+            gets(a.sigla);
+        add_estd(a);
 }
+
+    }
 
 void list_estd() {      //lista todos os estados
     FILE *f = parametro("estado.bin");
@@ -66,9 +93,7 @@ void list_estd() {      //lista todos os estados
 
     }
     fclose(f);
-
 }
-
 
 void find_uf_name(char nome[]) {                //usa as informações obtidas e procura o estado pelo nomne//////////
     FILE *f = leitura("estado.bin");                                                                           //
