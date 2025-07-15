@@ -40,10 +40,17 @@ FILE *leitura(char str[]) {         //abre o arquivo para leitura
             }
         }
 
+    fclose(f);
             return encontrado;
         }
+
+void_uf_arq_to_vetor(FILE *f, estd *vetor) {
+    FILE *f = parametro("estado.bin");
+    fseek(f , 0, SEEK_SET  );
+    fread(vetor, sizeof(estd), 1, f);
     fclose(f);
 
+}
 
 void add_estd(estd a) {
     FILE *f = parametro("estado.bin");
@@ -68,7 +75,7 @@ void add_estd_ui(){                       //inserir
         else{
             tst = 1;
         }
-        
+
         printf("nome do estado: ");
         fflush(stdin);
             gets(a.nome);
