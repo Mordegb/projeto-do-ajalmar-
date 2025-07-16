@@ -1,0 +1,305 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "estado.h"
+#include <stdio.h>
+#include <string.h>
+
+/*typedef struct estado {
+    int codigo;
+    char nome[20];
+    char sigla[3];
+} estd;*/
+estd* estado[50];
+
+
+
+FILE  *parametro(char str[]) {
+    FILE *arq = fopen(str, "rb+");
+    if (arq == NULL) {
+        arq = fopen(str, "wb+");
+    if (arq == NULL) {
+            printf("erro ao abrir arquivo");
+            return arq;
+    }
+    }
+}
+FILE *leitura(char str[]) {         //abre o arquivo para leitura
+    FILE *arq = fopen(str, "rb");
+    return arq;
+}
+
+
+    int teste_chave_primaria(int codigo) {  //ok
+        int encontrado = 0;
+        estd* a = (estd*) malloc(sizeof(estd));
+        FILE *f = leitura("estado.bin");
+        while (fread(a, sizeof(estd), 1, f) == 1) {
+            if (a->codigo == codigo) {
+                encontrado = 1;
+                break;
+            }
+        }
+    free(a);
+    fclose(f);
+            return encontrado;
+        }
+
+/*void_uf_arq_to_vetor(FILE *f, estd *vetor) {
+
+    fseek(f , 0, SEEK_SET  );
+    fread(vetor, sizeof(estd), 1, f);
+    fclose(f);
+
+}*/
+
+void add_estd(estd* a) {
+    FILE *f = parametro("estado.bin");
+    fseek(f, 0, SEEK_END);
+    fwrite(a, sizeof(a), 1, f);
+    fclose(f);
+}
+
+void add_estd_ui(){             //ok          //inserir
+    estd* a = (estd*) malloc(sizeof(estd));
+    int code = 1;
+    int tst = 0;
+    while (!tst) {
+        printf("codigo do estado: ");
+          scanf("%d" , a->codigo);
+            code = a->codigo;
+        if(teste_chave_primaria(code)){
+            printf("codigo ja cadestrado, tente novamente.");
+            printf("\n");
+            continue;
+        }
+        else{
+            tst = 1;
+        }
+
+        printf("nome do estado: ");
+        fflush(stdin);
+            gets(a->nome);
+        printf("sigla do estado: ");
+        fflush(stdin);
+            gets(a->sigla);
+        add_estd(a);
+}
+
+    }
+
+void list_estd() {      //lista todos os estados  // ok.
+    FILE *f = parametro("estado.bin");
+        fseek(f, 0, SEEK_END);
+        long int i = (long int) (ftell(f)/sizeof(estd));
+    if (i == 0) {
+    printf("nenhum estado foi cadastrado.");
+    }
+     fseek(f, 0, SEEK_SET);
+    estd* a = (estd*) malloc(sizeof(estd));
+        fread(a, sizeof(estd), i, f) == 1;
+
+    for (int l = 0; l < i; l++ ) {
+        printf("codigo do estado: %d\n", a[l].codigo);
+        printf("nome do estado: %s\n", a[l].nome);
+        printf("sigla do estado: %s\n", a[l].sigla);
+        printf("\n");
+
+    }
+    free(a);
+    fclose(f);
+}
+
+void find_uf_name(char* nome[]) {                //usa as informações obtidas e procura o estado pelo nomne//////////
+    FILE *f = leitura("estado.bin");                                                                           //
+    int encontrado = 0;                                                                                           //
+    estd* a = (estd*) malloc(sizeof(estd));                                                                                                      //
+    while (fread(&a, sizeof(a), 1, f) == 1) {                                                     //
+        if (strcmp(a->nome, nome) == 0) {                                                                          //
+            printf("\n");                                                                                   //
+            printf("codigo do estado: %d\n", a->codigo);                                                     //
+            printf("nome do estado: %s\n", a->nome);                                                         //
+            printf("sigla do estado: %s\n", a->sigla);                                                       //
+            printf("\n");                                                                                   //
+            encontrado = 1;                                                                                       //
+            break;                                                                                                //
+        }                                                                                                         //
+    }                                                                                                             //
+    if (encontrado != 1) {                                                                                        //
+        printf("Estado '%s' não encontrado no arquivo.\n", nome);                                           //
+}                                                                                                                 //
+    free(a);
+    fclose(f);                                                                                                    //
+}                                                                                                                 //
+                                                                                                                  //
+void find_uf_name_ui(){                           //pega as informações do usuario para buscar o estado pelo nome //
+    char* nome = malloc(sizeof(char) * 20);
+    printf("informe o nome que deseja procurar:");
+    fflush(stdin);
+    gets(nome);
+    find_uf_name(nome);
+
+        }
+
+
+
+void find_uf_code(int* code) {                            // procura um estado pelo codigo informado pelo codigo   //
+    FILE *f = leitura("estado.bin");                                                                           //
+    int encontrado = 0;                                                                                           //
+    estd* a = (estd*) malloc(sizeof(estd));                                                                                                       //
+    while (fread(&a, sizeof(a), 1, f) == 1) {                                                     //
+        if (a->codigo == code)  {                                                                                  //
+            printf("\n");                                                                                   //
+            printf("codigo do estado: %d\n", a->codigo);                                                     //
+            printf("nome do estado: %s\n", a->nome);                                                         //
+            printf("sigla do estado: %s\n", a->sigla);                                                       //
+            printf("\n");                                                                                   //
+            encontrado = 1;                                                                                       //
+            break;                                                                                                //
+        }                                                                                                         //
+    }                                                                                                             //
+    if (encontrado != 1) {                                                                                        //
+        printf("Estado '%s' não encontrado no arquivo.\n", code);                                           //
+    }free(a);
+    fclose(f);                                                                                                    //
+}                                                                                                                 //
+                                                                                                                  //
+                                                                                                                  //
+void find_uf_code_ui() {                    //recebe as informações para colocar no                               //
+    int* codigo = malloc(sizeof(int));
+    printf("informe o codigo que deseja procurar: ");
+    scanf("%d", codigo);
+    find_uf_code(codigo);
+}
+
+void find_uf_sigla(char* sigla[]) {                //usa as informações obtidas e procura o estado pelo nome    /////
+    FILE *f = leitura("estado.bin");                                                                           //
+    int encontrado = 0;                                                                                           //
+    estd* a = (estd*) malloc(sizeof(estd));                                                                                                      //
+    while (fread(a, sizeof(a), 1, f) == 1) {                                                     //
+        if (strcmp(a->sigla, sigla) == 0) {                                                                        //
+            printf("\n");
+            printf("codigo do estado: %d\n", a->codigo);                                                     //
+            printf("nome do estado: %s\n", a->nome);                                                         //
+            printf("sigla do estado: %s\n", a->sigla);                                                       //
+            printf("\n");                                                                                   //
+            encontrado = 1;                                                                                       //
+            break;                                                                                                //
+        }                                                                                                         //
+    }                                                                                                             //
+    if (encontrado != 1) {                                                                                        //
+        printf("Estado '%s' não encontrado no arquivo.\n", sigla);                                          //
+}                                                                                                                 //
+    free(a);
+    fclose(f);                                                                                                    //
+}                                                                                                                 //
+                                                                                                                  //
+void find_uf_sigla_ui(){                          //pega as informações do usuario para buscar o estado pelo nome //
+    char* sigla = malloc(sizeof(char) * 3);
+    printf("informe o sigla do estado que deseja procurar: ");
+    fflush(stdin);
+    gets(sigla);
+    find_uf_sigla(sigla);
+
+}
+
+
+void edit_uf() {
+    int* codigo = malloc(sizeof(int));
+    FILE *f = parametro("estado.bin");
+    printf("informe o codigo do estado que deseja editar: ");
+    scanf("%d", codigo);
+    find_uf_code(codigo);
+    estd* a = (estd*) malloc(sizeof(estd));
+    printf("informe o novo codigo do estado: ");
+    scanf("%d", a->codigo);
+    printf("informe o novo nome do estado: ");
+    fflush(stdin);
+    gets(a->nome);
+    printf("informe a nova sigla do estado: ");
+    fflush(stdin);
+    gets(a->sigla);
+    fwrite(&a, sizeof(a), 1, f);
+    fclose(f);
+}
+
+void procurar_estado() {
+    printf("=============================");
+    printf("como deseja buscar o aruivo?");
+    printf("=============================");
+    printf("\n");
+    printf("\n");
+
+    int option;
+    printf("1 - procurar estado pelo codigo. 2 - procurar estado pelo nome. 3 - procurar estado pelo sigla.\n");
+    scanf("%d", &option);
+
+    switch (option)
+    {
+        case 1:
+            find_uf_code_ui();
+            break;
+
+        case 2:
+            find_uf_name_ui();
+            break;
+
+        case 3:
+            find_uf_sigla_ui();
+            break;
+    default:
+            printf("opção invalida, tente novamente.");
+            printf("\n");
+            break;
+    }
+}
+
+
+
+
+int main() {
+
+    printf("\n");
+    printf("==================================\n");
+    printf("  bem vindo as eleçoes IFCE 2025  \n");
+    printf("==================================\n");
+    printf("\n");
+    printf("\n");
+
+    int option;
+    printf("oque deseja realizar em seu banco de dados?.\n");
+    printf("1 - inserir estado. 2 - procurar estado.\n");
+    printf("3 - listar estados. 4 - editar estado.\n");
+
+    scanf("%d", &option);
+
+
+    switch (option)
+    {
+        case 1:
+            add_estd_ui();
+            break;
+
+        case 2:
+         procurar_estado();
+            break;
+
+        case 3:
+           list_estd();
+            break;
+
+        case 4:
+            edit_uf();
+            break;
+        case 5:
+            find_uf_name_ui();
+        default:
+            printf("opção invalida, tente novamente.");
+            printf("\n");
+            break;
+    }
+
+
+
+
+    return 0;
+}
