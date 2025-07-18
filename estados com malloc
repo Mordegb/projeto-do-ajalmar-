@@ -7,16 +7,15 @@
 estd** estados = NULL;
 int total_estados = 0;
 
-// Função auxiliar para limpar buffer de entrada
-void limpar_buffer() {
+
+void limpar_getchar() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-// Carrega estados do arquivo binário
+// Carrega estados do arquivo
 void carregar_estados() {
     FILE* f = fopen("estado.bin", "rb");
-    if (!f) return;
 
     fseek(f, 0, SEEK_END);
     long tamanho = ftell(f);
@@ -32,14 +31,9 @@ void carregar_estados() {
     fclose(f);
 }
 
-// Salva estados no arquivo binário
-void salvar_estados() {
+// Salva estados no arquivo
+void salvar_estados_arq() {
     FILE* f = fopen("estado.bin", "wb");
-    if (!f) {
-        perror("Erro ao salvar estados");
-        return;
-    }
-
     for (int i = 0; i < total_estados; i++) {
         fwrite(estados[i], sizeof(estd), 1, f);
     }
@@ -56,8 +50,8 @@ void liberar_memoria() {
     total_estados = 0;
 }
 
-// Verifica se um código já existe
-int codigo_existente(int codigo) {
+// Verifica se um codigo já existe
+int verificar_chave_primaria(int codigo) {
     for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo) {
             return 1;
@@ -66,7 +60,7 @@ int codigo_existente(int codigo) {
     return 0;
 }
 
-// Adiciona novo estado (usando ponteiro)
+// Adiciona novo estado usando ponteiro
 void adicionar_estado(estd* novo) {
     total_estados++;
     estados = (estd**)realloc(estados, total_estados * sizeof(estd*));
@@ -77,57 +71,53 @@ void adicionar_estado(estd* novo) {
     strncpy(estados[total_estados - 1]->nome, novo->nome, sizeof(novo->nome) - 1);
     strncpy(estados[total_estados - 1]->sigla, novo->sigla, sizeof(novo->sigla) - 1);
 
-    salvar_estados();
+    salvar_estados_arq();
 }
 
-// Interface para adicionar estado
+// Interface para adicionar estado usando ponteiro
 void adicionar_estado_ui() {
-    estd novo;
+    estd* novo = (estd*)malloc(sizeof(estd));
+
     int codigo_valido = 0;
 
-    while (!codigo_valido) {
-        printf("Código do estado: ");
-        scanf("%d", &novo.codigo);
-        limpar_buffer();
-        if (codigo_existente(novo.codigo)) {
-            printf("Código já existe!\n");
+    while (!codigo_valido) {    //editar para ficcar mais simples e feito por um iniciante.
+        printf("codigo do estado: ");
+        scanf("%d", &novo->codigo);
+        limpar_getchar();
+        if (verificar_chave_primaria(novo->codigo)) {
+            printf("chave ja cadastrada.\n");
         } else {
             codigo_valido = 1;
         }
     }
 
     printf("Nome do estado: ");
-    fgets(novo.nome, sizeof(novo.nome), stdin);
-    novo.nome[strcspn(novo.nome, "\n")] = '\0';
+    fflush(stdin);
+    gets(novo -> nome);
 
     printf("Sigla do estado (2 caracteres): ");
-    fgets(novo.sigla, sizeof(novo.sigla), stdin);
-    novo.sigla[strcspn(novo.sigla, "\n")] = '\0';
+    fflush(stdin);
+    gets(novo -> sigla);
 
-    adicionar_estado(&novo);
-    printf("Estado adicionado com sucesso!\n");
+    adicionar_estado(novo);
+    free(novo); // Libera memória após cópia
 }
 
-// Lista todos os estados
+// Lista todos os estados usando ponteiros
 void listar_estados() {
-    if (total_estados == 0) {
-        printf("Nenhum estado cadastrado\n");
-        return;
-    }
-
     for (int i = 0; i < total_estados; i++) {
+        printf("\n");
         printf("Codigo: %d\n", estados[i]->codigo);
         printf("Nome: %s\n", estados[i]->nome);
         printf("Sigla: %s\n", estados[i]->sigla);
-            printf("\n");
-
+        printf("\n");
     }
 }
 
-// Busca estado por nome
-void buscar_por_nome(const char* nome) {
+// Busca estado por nome usando ponteiros
+void buscar_por_nome(const char* nome_a_buscar) {
     for (int i = 0; i < total_estados; i++) {
-        if (strcmp(estados[i]->nome, nome) == 0) {
+        if (strcmp(estados[i]->nome, nome_a_buscar) == 0) {
             printf("Codigo: %d\n", estados[i]->codigo);
             printf("Nome: %s\n", estados[i]->nome);
             printf("Sigla: %s\n", estados[i]->sigla);
@@ -138,65 +128,67 @@ void buscar_por_nome(const char* nome) {
     printf("Estado não encontrado!\n");
 }
 
-// Busca estado por código
-void buscar_por_codigo(int codigo) {
+// Busca estado por codigo usando ponteiros
+void buscar_por_codigo(int codigo_a_buscar) {
     for (int i = 0; i < total_estados; i++) {
-        if (estados[i]->codigo == codigo) {
-            printf("Código: %d\n", estados[i]->codigo);
+        if (estados[i]->codigo == codigo_a_buscar) {
+            printf("codigo: %d\n", estados[i]->codigo);
             printf("Nome: %s\n", estados[i]->nome);
             printf("Sigla: %s\n", estados[i]->sigla);
+            printf("\n");
             return;
         }
     }
     printf("Estado não encontrado!\n");
 }
 
-// Busca estado por sigla
-void buscar_por_sigla(const char* sigla) {
+// Busca estado por sigla usando ponteiros
+void buscar_por_sigla(const char* sigla_a_buscar) {
     for (int i = 0; i < total_estados; i++) {
-        if (strcmp(estados[i]->sigla, sigla) == 0) {
+        if (strcmp(estados[i]->sigla, sigla_a_buscar) == 0) {
             printf("Codigo: %d\n", estados[i]->codigo);
             printf("Nome: %s\n", estados[i]->nome);
             printf("Sigla: %s\n", estados[i]->sigla);
+            printf("\n");
             return;
         }
     }
     printf("Estado não encontrado!\n");
 }
 
-// Menu de buscas
-void menu_busca() {
+// Menu de buscas usando ponteiros
+void buscar_estado() {
     int opcao;
-    printf("\nOpções de busca:\n");
-    printf("1. Por nome\n");
-    printf("2. Por código\n");
-    printf("3. Por sigla\n");
-    printf("Escolha: ");
+
+    printf("1 - procurar estado pelo codigo. 2 - procurar estado pelo nome. 3 - procurar estado pelo sigla.\n");
     scanf("%d", &opcao);
+    limpar_getchar();
 
     switch (opcao) {
         case 1: {
-            char nome[50];
+            char* nome = (char*)malloc(50 * sizeof(char));
             printf("Nome: ");
-            fgets(nome, sizeof(nome), stdin);
+            fgets(nome, 50, stdin);
             nome[strcspn(nome, "\n")] = '\0';
             buscar_por_nome(nome);
+            free(nome);
             break;
         }
         case 2: {
             int codigo;
-            printf("Código: ");
+            printf("codigo: ");
             scanf("%d", &codigo);
-            limpar_buffer();
+            limpar_getchar();
             buscar_por_codigo(codigo);
             break;
         }
         case 3: {
-            char sigla[3];
+            char* sigla = (char*)malloc(3 * sizeof(char));
             printf("Sigla (2 letras): ");
-            fgets(sigla, sizeof(sigla), stdin);
+            fgets(sigla, 3, stdin);
             sigla[strcspn(sigla, "\n")] = '\0';
             buscar_por_sigla(sigla);
+            free(sigla);
             break;
         }
         default:
@@ -204,49 +196,49 @@ void menu_busca() {
     }
 }
 
-// Edita um estado existente
+// Edita um estado existente usando ponteiros
 void editar_estado() {
     int codigo;
-    printf("Código do estado a editar: ");
+    printf("codigo do estado a editar: ");
     scanf("%d", &codigo);
-    buscar_por_codigo(codigo);
-    limpar_buffer();
+    limpar_getchar();
+
     for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo) {
-            printf("Novo nome: ", estados[i]->nome);
+            printf("Novo nome [atual: %s]: ", estados[i]->nome);
             fgets(estados[i]->nome, sizeof(estados[i]->nome), stdin);
             estados[i]->nome[strcspn(estados[i]->nome, "\n")] = '\0';
 
-            printf("Nova sigla: ", estados[i]->sigla);
+            printf("Nova sigla [atual: %s]: ", estados[i]->sigla);
             fgets(estados[i]->sigla, sizeof(estados[i]->sigla), stdin);
             estados[i]->sigla[strcspn(estados[i]->sigla, "\n")] = '\0';
 
-            salvar_estados();
+            salvar_estados_arq();
             printf("Estado atualizado!\n");
             return;
         }
     }
-
+    printf("Estado não encontrado!\n");
 }
 
-// Remove um estado
+// Remove um estado usando ponteiros
 void remover_estado() {
     int codigo;
-    printf("Código do estado a remover: ");
+    printf("codigo do estado a remover: ");
     scanf("%d", &codigo);
-    limpar_buffer();
+    limpar_getchar();
+
     for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo) {
             free(estados[i]);
 
-            // Compacta o array
             for (int j = i; j < total_estados - 1; j++) {
                 estados[j] = estados[j + 1];
             }
 
             total_estados--;
             estados = (estd**)realloc(estados, total_estados * sizeof(estd*));
-            salvar_estados();
+            salvar_estados_arq();
             printf("Estado removido!\n");
             return;
         }
@@ -264,26 +256,54 @@ void menu_principal() {
         printf("3 - listar estados. 4 - editar estado.\n");
         printf("5 - excluir estado. 0 - sair\n");
         scanf("%d", &opcao);
-       limpar_buffer();
+       limpar_getchar();
 
         switch (opcao) {
             case 1:
-                adicionar_estado_ui();
+                 adicionar_estado_ui();
                 break;
 
-            case 2: menu_busca(); break;
-            case 3: listar_estados(); break;
-            case 4: editar_estado(); break;
-            case 5: remover_estado(); break;
-            case 0: printf("Saindo...\n"); break;
-            default: printf("Opção inválida!\n");
+            case 2:
+
+                 buscar_estado();
+                break;
+
+            case 3:
+                
+                 listar_estados();
+                 break;
+
+            case 4:
+
+                 editar_estado();
+                break;
+
+            case 5:
+
+                 remover_estado();
+                break;
+
+            case 0:
+                 printf("Saindo...\n");
+                break;
+            default:
+             printf("Opção inválida!\n");
         }
     } while (opcao != 0);
 }
 
+
+
 int main() {
     carregar_estados();
-    printf("\n=== Sistema de Estados ===\n");
+
+    printf("\n");
+    printf("==================================\n");
+    printf("  bem vindo as eleçoes IFCE 2025  \n");
+    printf("==================================\n");
+    printf("\n");
+    printf("\n");
+
     menu_principal();
     liberar_memoria();
     return 0;
