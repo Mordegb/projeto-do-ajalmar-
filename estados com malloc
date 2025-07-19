@@ -264,25 +264,17 @@ void menu_principal() {
                 break;
 
             case 2:
-
                  buscar_estado();
                 break;
-
             case 3:
-                
                  listar_estados();
                  break;
-
             case 4:
-
                  editar_estado();
                 break;
-
             case 5:
-
                  remover_estado();
                 break;
-
             case 0:
                  printf("Saindo...\n");
                 break;
