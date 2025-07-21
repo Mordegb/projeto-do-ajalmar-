@@ -21,3 +21,4 @@ void listar_todas_pessoas();
 void bucar_pessoas_por_titulo(const char* titulo_a_buscar);
 void listar_procurar_pessoa();
 void menu_principal();
+void func_main_pessoa();
