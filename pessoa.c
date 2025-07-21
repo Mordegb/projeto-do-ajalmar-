@@ -3,14 +3,7 @@
 #include <string.h>
 #include "pessoa.h"
 
-/*typedef struct  pessoa{
-    char CPF[13];
-    char titulo[14];
-    char nome[50];
-    char fone[20];
-    char endereço[45];
-    char Dnasci[12];
-} persona;*/
+
 
 persona** vetor_pessoa = NULL;          //estados = vetor_pessoa
 int total_pessoas = 0;
@@ -311,7 +304,12 @@ void menu_principal() {
     } while (opcao != 0);
 }
 
-
+void func_main_pessoa()
+  {
+    carregar_pessoas();
+    menu_principal();
+    liberar_memoria();
+}
 int main() {
     carregar_pessoas();
 
