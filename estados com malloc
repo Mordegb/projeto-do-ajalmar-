@@ -41,7 +41,7 @@ void salvar_estados_arq() {
 }
 
 // Libera toda a memória alocada
-void liberar_memoria() {
+void liberar_memoria_uf() {
     for (int i = 0; i < total_estados; i++) {
         free(estados[i]);
     }
@@ -51,7 +51,7 @@ void liberar_memoria() {
 }
 
 // Verifica se um codigo já existe
-int verificar_chave_primaria(int codigo) {
+int testar_chave_primaria_code(int codigo) {
     for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo) {
             return 1;
@@ -84,7 +84,7 @@ void adicionar_estado_ui() {
         printf("codigo do estado: ");
         scanf("%d", &novo->codigo);
         limpar_getchar();
-        if (verificar_chave_primaria(novo->codigo)) {
+        if (testar_chave_primaria_code(novo->codigo)) {
             printf("chave ja cadastrada.\n");
         } else {
             codigo_valido = 1;
@@ -129,7 +129,7 @@ void buscar_por_nome(const char* nome_a_buscar) {
 }
 
 // Busca estado por codigo usando ponteiros
-void buscar_por_codigo(int codigo_a_buscar) {
+void buscar_por_codigo_uf(int codigo_a_buscar) {
     for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo_a_buscar) {
             printf("codigo: %d\n", estados[i]->codigo);
@@ -179,7 +179,7 @@ void buscar_estado() {
             printf("codigo: ");
             scanf("%d", &codigo);
             limpar_getchar();
-            buscar_por_codigo(codigo);
+            buscar_por_codigo_uf(codigo);
             break;
         }
         case 3: {
@@ -228,7 +228,7 @@ void remover_estado() {
     scanf("%d", &codigo);
     limpar_getchar();
 
-    for (int i = 0; i < total_estados; i++) {
+ for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo) {
             free(estados[i]);
 
@@ -239,7 +239,7 @@ void remover_estado() {
             total_estados--;
             estados = (estd**)realloc(estados, total_estados * sizeof(estd*));
             salvar_estados_arq();
-            printf("Estado removido!\n");
+            printf("estado explodido com sucesso!\n");
             return;
         }
     }
@@ -284,9 +284,13 @@ void menu_principal() {
     } while (opcao != 0);
 }
 
+void func_main_uf() {
+    carregar_estados();
+    menu_principal();
+    liberar_memoria_uf();
+}
 
-
-int main() {
+/*int main() {
     carregar_estados();
 
     printf("\n");
@@ -297,6 +301,6 @@ int main() {
     printf("\n");
 
     menu_principal();
-    liberar_memoria();
+    liberar_memoria_uf();
     return 0;
-}
+}*/
