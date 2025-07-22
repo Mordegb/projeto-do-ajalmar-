@@ -247,7 +247,7 @@ void remover_estado() {
 }
 
 // Menu principal
-void menu_principal() {
+void menu_principal_uf() {
     int opcao;
     do {
         printf("\nO que deseja realizar em seu banco de dados?\n");
@@ -286,7 +286,7 @@ void menu_principal() {
 
 void func_main_uf() {
     carregar_estados();
-    menu_principal();
+    menu_principal_uf();
     liberar_memoria_uf();
 }
 
@@ -300,7 +300,7 @@ void func_main_uf() {
     printf("\n");
     printf("\n");
 
-    menu_principal();
+    menu_principal_uf();
     liberar_memoria_uf();
     return 0;
 }*/
