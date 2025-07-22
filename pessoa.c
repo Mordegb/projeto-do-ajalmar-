@@ -266,7 +266,7 @@ void listar_procurar_pessoa() {
 }
 
 
-void menu_principal() {
+void menu_principal_pessoa() {
     int opcao;
     do {
 
@@ -307,20 +307,6 @@ void menu_principal() {
 void func_main_pessoa()
   {
     carregar_pessoas();
-    menu_principal();
+    menu_principal_pessoa();
     liberar_memoria();
-}
-int main() {
-    carregar_pessoas();
-
-    printf("\n");
-    printf("==================================\n");
-    printf("  bem vindo as eleçoes IFCE 2025  \n");
-    printf("==================================\n");
-    printf("\n");
-    printf("\n");
-
-    menu_principal();
-    liberar_memoria();
-    return 0;
 }
