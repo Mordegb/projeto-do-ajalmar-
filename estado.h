@@ -19,5 +19,5 @@ void buscar_por_sigla(const char* sigla_a_buscar);
 void buscar_estado();
 void editar_estado();
 void remover_estado();
-void menu_principal();
+void menu_principal_uf();
 void func_main_uf();
