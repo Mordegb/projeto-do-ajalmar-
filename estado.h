@@ -2,10 +2,11 @@
 typedef struct estado {
     int codigo;
     char nome[20];
-    char sigla[3];
+    char sigla[4];
 } estd;
 
 void limpar_getchar();
+FILE* parametro_uf(char str[]);
 void carregar_estados();
 void salvar_estados_arq();
 void liberar_memoria_uf();
