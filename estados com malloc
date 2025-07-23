@@ -8,14 +8,27 @@ estd** estados = NULL;
 int total_estados = 0;
 
 
-void limpar_getchar() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+ void limpar_getchar() {
+     int c;
+     while ((c = getchar()) != '\n' && c != EOF);
 }
+
+FILE* parametro_uf(char str[]) {
+
+     FILE* arq = fopen(str, "rb+");
+     if (arq == NULL) {
+         arq = fopen(str, "wb+");
+         if (arq == NULL) {
+             printf("Erro ao criar o arquivo %s\n", str);
+             return NULL;
+         }
+     }
+     return arq;
+ }
 
 // Carrega estados do arquivo
 void carregar_estados() {
-    FILE* f = fopen("estado.bin", "rb");
+    FILE* f = parametro_uf("estado.bin");
 
     fseek(f, 0, SEEK_END);
     long tamanho = ftell(f);
@@ -91,13 +104,13 @@ void adicionar_estado_ui() {
         }
     }
 
-    printf("Nome do estado: ");
-    fflush(stdin);
-    gets(novo -> nome);
+     printf("nome do estado: ");
+     fgets(novo->nome, sizeof(novo->nome), stdin);
+     novo->nome[strcspn(novo->nome, "\n")] = '\0';
 
-    printf("Sigla do estado (2 caracteres): ");
-    fflush(stdin);
-    gets(novo -> sigla);
+     printf("Sigla do estado: ");
+     fgets(novo->sigla, sizeof(novo->sigla), stdin);
+     novo->sigla[strcspn(novo->sigla, "\n")] = '\0';
 
     adicionar_estado(novo);
     free(novo); // Libera memória após cópia
@@ -166,20 +179,20 @@ void buscar_estado() {
 
     switch (opcao) {
         case 1: {
+            int codigo;
+            printf("codigo: ");
+            scanf("%d", &codigo);
+            limpar_getchar();
+            buscar_por_codigo_uf(codigo);
+            break;
+        }
+        case 2: {
             char* nome = (char*)malloc(50 * sizeof(char));
             printf("Nome: ");
             fgets(nome, 50, stdin);
             nome[strcspn(nome, "\n")] = '\0';
             buscar_por_nome(nome);
             free(nome);
-            break;
-        }
-        case 2: {
-            int codigo;
-            printf("codigo: ");
-            scanf("%d", &codigo);
-            limpar_getchar();
-            buscar_por_codigo_uf(codigo);
             break;
         }
         case 3: {
@@ -227,6 +240,7 @@ void remover_estado() {
     printf("codigo do estado a remover: ");
     scanf("%d", &codigo);
     limpar_getchar();
+     buscar_por_codigo_uf(codigo);
 
  for (int i = 0; i < total_estados; i++) {
         if (estados[i]->codigo == codigo) {
