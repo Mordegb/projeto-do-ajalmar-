@@ -230,9 +230,25 @@ void listar_todas_pessoas() {
     }
 }
 
-void bucar_pessoas_por_titulo(const char* titulo_a_buscar) {
+void buscar_pessoas_por_titulo(const char* titulo_a_buscar) {
     for (int i = 0; i < total_pessoas; i++) {
         if (strcmp(vetor_pessoa[i] -> titulo, titulo_a_buscar) == 0) {
+            printf("CPF: %s\n", vetor_pessoa[i]->CPF);
+            printf("titulo: %s\n", vetor_pessoa[i] -> titulo);
+            printf("nome: %s\n", vetor_pessoa[i] -> nome);
+            printf("fone: %s\n", vetor_pessoa[i] -> fone);
+            printf("endereço: %s\n", vetor_pessoa[i] -> endereço);
+            printf("data de nascimento: %s\n", vetor_pessoa[i] -> Dnasci);
+            printf("\n");
+            return;
+        }
+    }
+    printf("pessoa não encontrado!\n");
+}
+
+void buscar_pessoas_por_CPF(const char* CPF_a_buscar) {
+    for (int i = 0; i < total_pessoas; i++) {
+        if (strcmp(vetor_pessoa[i] -> CPF, CPF_a_buscar) == 0) {
             printf("CPF: %s\n", vetor_pessoa[i]->CPF);
             printf("titulo: %s\n", vetor_pessoa[i] -> titulo);
             printf("nome: %s\n", vetor_pessoa[i] -> nome);
@@ -261,7 +277,7 @@ void listar_procurar_pessoa() {
             fflush(stdin);
             char titulo[14];
             gets(titulo);
-            bucar_pessoas_por_titulo(titulo);
+            buscar_pessoas_por_titulo(titulo);
     }
 }
 
@@ -294,6 +310,9 @@ void menu_principal_pessoa() {
 
                 excluir_pessoa();
                 break;
+
+            case 5:
+              //  buscar_pessoas_por_CPF();
 
             case 0:
                 printf("Saindo...\n");
