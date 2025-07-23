@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "eleicao.h"
-#include "estado.c"
+//#include "estado.c"
 
 /*typedef struct eleição{
      int codigo_uf;
@@ -323,7 +323,7 @@ void func_main_eleicao() {
 }
 
 
-int main() {
+/*int main() {
 
     carregar_eleiçoes();
 
@@ -337,4 +337,4 @@ int main() {
     menu_principal_eleicao();
     liberar_memoria_eleicao();
     return 0;
-}
+}*/
